@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/dog-default.png">
+  <link rel="stylesheet" href="panel.css" />
+  <!-- Info: title is used to check if this tab is open -->
+  <title>&#128062; Active Ninja Hacker Dog</title>
+</head>
+
+<body>
+  <div id="main">
+    <audio src="sounds/woof.mp3" id="sound"></audio>
+
+    <div id="sidebar">
+      <img class="avatar" alt="Script Doggy" id="dog-default" src="images/dog-default.png">
+      <img class="avatar avatar-left" alt="Script Doggy" id="dog-panic" src="images/dog-panic.png">
+      <img class="avatar avatar-left" alt="Script Doggy" id="dog-laugh" src="images/dog-laugh.png">
+      <img class="avatar" alt="Script Doggy" id="dog-love" src="images/dog-love.png">
+      <img class="avatar avatar-left" alt="Script Doggy" id="dog-omg" src="images/dog-omg.png">
+
+      <label for="autoRequest">
+        <input type="checkbox" checked="checked" id="autoRequest">
+        Check while browsing
+      </label><br />
+      <label for="checkboxCritPOC" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxCritPOC">
+        Check crit. PoC
+      </label><br />
+      <label for="checkboxVersions" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxVersions">
+        Check versions
+      </label><br />
+      <label for="checkboxWeb" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxWeb">
+        Check web security
+      </label><br />
+      <label for="checkboxLeaks" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxLeaks">
+        Check leaky files
+      </label><br />
+      <div id="proxy-settings">
+        <label for="proxyEnabled">
+          <input type="checkbox" id="proxyEnabled">
+          Enable Proxy
+        </label><br />
+        <label for="proxyHost">Host:</label>
+        <input type="text" id="proxyHost" placeholder="localhost"><br />
+        <label for="proxyPort">Port:</label>
+        <input type="text" id="proxyPort" placeholder="8080"><br />
+        <label for="proxyUser">User (optional):</label>
+        <input type="text" id="proxyUser"><br />
+        <label for="proxyPass">Pass (optional):</label>
+        <input type="password" id="proxyPass"><br />
+        <div id="proxy-actions">
+          <button type="button" id="saveProxy">Save Proxy</button>
+          <button type="button" id="proxyTest">Test Connection</button>
+        </div>
+        <div id="proxyStatus" class="proxy-status small hidden"></div>
+      </div>
+      <label for="checkboxActive" class="checkbox-rules">
+        <input type="checkbox" id="checkboxActive">
+        Enable Active Scanning (Potentially Harmful)
+      </label>
+      <br>
+      <label for="checkboxHtaccess" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxHtaccess">
+        Check for .htaccess
+      </label><br />
+      <label for="checkboxFuzzing" class="checkbox-rules">
+        <input type="checkbox" checked="checked" id="checkboxFuzzing">
+        Fuzz all params
+      </label><br />
+      <div class="stats" id="stats">No request sent yet...</div>
+      <div class="currently-scanning" id="currently-scanning"></div>
+      
+      <button id="skip-scan" class="hidden">Skip Current Scan</button>
+      <p class="small">
+        Note: If a Website is already scanned you have to open a new Tab to scan the same site again.
+      </p>
+      
+      <p class="small">
+        Please use Ninja Hacker Dog with care. Your IP can be blocked or you could
+        be disrupting web servers. If you close this tab all checks will stop.
+      </p>
+      
+    </div>
+    <div id="content">
+      <div id="alert-tools" class="hidden">
+        <div class="tool-actions">
+          <input type="search" id="alert-filter" placeholder="Filter alerts..." aria-label="Filter alerts">
+          <button id="export-alerts">Export Alerts (JSON)</button>
+        </div>
+        <a href="#" id="reset" class="hidden"><img width="22" height="20" src="trash.svg"> Remove all alerts</a>
+      </div>
+      <div id="domain-container"></div>
+      <p>
+        Dear human,<br />
+        thanks for checking your web applications for baaaaad
+        security vulnerabilities. Ninja Hacker Dog is free and my source code
+        can be found <a href="https://github.com/Bauvater/ninja-hacker-dog" target="_blank">on GitHub</a>.
+      </p>
+      <p>
+        If you close this tab (or uncheck the box) i will stop snooping around
+        and take a nap.
+      </p>
+      <p>
+        xoxo, &#128054; Script Doggy! <br><br>
+        PS: Credits goes to 1337core the Original Project that this is based on <a href="https://github.com/Leetcore/ninja-hacker-cat" target="_blank">(Ninja Hacker Cat)</a> &#128049;
+      </p>
+    </div>
+  </div>
+  <div id="footer">
+    Built by Bauvater
+  </div>
+  <script src="scripts/main.js" type="module"></script>
+</body>
+
+</html>
+
+
+
+
+

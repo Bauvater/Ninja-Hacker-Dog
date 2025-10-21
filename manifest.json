@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Ninja-Hacker-Dog",
+  "description": "Cute Script Doggy makes web security checks for you!",
+  "version": "1.7",
+  "browser_action": {
+    "default_icon": "images/dog-default-grey.png",
+    "default_title": "Woof!"
+  },
+  "background": {
+    "scripts": ["scripts/background.js"]
+  },
+  "permissions": [
+    "proxy",
+    "storage",
+    "notifications",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ]
+}

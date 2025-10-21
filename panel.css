@@ -1,0 +1,331 @@
+﻿/* General styles for the page */
+html,
+body {
+	font-family: 'Nix 8810';
+	box-sizing: border-box;
+	background-color: #222;
+	color: #3EFF00;
+	font-size: 16px;
+}
+
+/* Styles for links */
+a,
+a:hover,
+a:visited {
+	color: #3EFF00;
+}
+
+/* Styles for the reset link */
+a#reset {
+	text-decoration: none;
+}
+
+/* Styles for the main container */
+#main {
+	position: relative;
+	margin: 20px auto;
+	max-width: 800px;
+}
+
+/* Styles for the sidebar */
+#sidebar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200px;
+}
+
+/* Styles for the content area */
+#content {
+	position: absolute;
+	top: 0px;
+	left: 250px;
+	width: 50%;
+	max-width: 500px;
+	min-width: 250px;
+}
+
+/* Styles for the footer */
+#footer {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}
+
+/* Styles for the avatar images */
+.avatar {
+	max-width: 250px;
+}
+
+/* Styles for input elements */
+input {
+	margin-left: -1px;
+}
+
+#proxy-actions {
+    display: flex;
+    gap: 6px;
+    margin: 6px 0;
+}
+
+#proxy-actions button {
+    padding: 4px 8px;
+    border: 1px solid #3EFF00;
+    border-radius: 4px;
+    background: transparent;
+    color: #3EFF00;
+    cursor: pointer;
+}
+
+#proxy-actions button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.proxy-status {
+    margin-top: 6px;
+}
+
+.proxy-status.success {
+    color: #3EFF00;
+}
+
+.proxy-status.error {
+    color: #ff6b6b;
+}
+
+.proxy-status.info {
+    color: #3EFF00;
+}
+
+/* Styles for deactivated checkboxes */
+.checkbox-deactivated {
+	color: #333;
+}
+
+/* Styles for small text */
+.small {
+	font-size: 70%;
+}
+
+/* Styles for the reset button */
+.reset {
+	border: none;
+	padding: 10px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+	color: #333;
+}
+
+/* Styles for the statistics display */
+.stats {
+	font-size: 80%;
+	margin-left: 24px;
+}
+
+/* Styles for alert tools container */
+#alert-tools {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+#alert-filter {
+    flex: 1 1 200px;
+    padding: 6px 8px;
+    border: 1px solid #3EFF00;
+    border-radius: 4px;
+    background-color: #111;
+    color: #3EFF00;
+}
+
+#alert-filter::placeholder {
+    color: #3EFF00;
+    opacity: 0.6;
+}
+
+#export-alerts {
+    padding: 6px 12px;
+    border: 1px solid #3EFF00;
+    border-radius: 4px;
+    background: transparent;
+    color: #3EFF00;
+    cursor: pointer;
+}
+
+#export-alerts:hover {
+    background-color: rgba(62, 255, 0, 0.1);
+}
+
+/* Styles for the message boxes */
+.message {
+	background-color: #3EFF000a;
+	padding: 10px;
+	margin: 5px 0px;
+	font-size: 18px;
+	border-radius: 5px;
+	box-shadow: 3px 3px #1a1a1a;
+	border: 1px solid #000;
+	word-wrap: anywhere;
+	word-break: break-all;
+	position: relative;
+}
+
+/* Styles for the delete message button */
+.delete-message {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: #3EFF00;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Styles for the details button */
+.details-button {
+    background: transparent;
+    border: 1px solid #3EFF00;
+    color: #3EFF00;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+/* Styles for the details content */
+.details-content,
+.details-content pre {
+    white-space: pre-wrap;         /* respektiert ZeilenumbrÃ¼che, erlaubt aber UmbrÃ¼che */
+    overflow-wrap: break-word;     /* moderner Standard */
+    word-wrap: break-word;         /* Fallback fÃ¼r alte Browser */
+    word-break: break-all;         /* bricht wirklich mitten im Wort */
+    max-width: 100%;               /* verhindert Ãœberlaufen aus Container */
+    overflow: hidden;              /* versteckt Ã¼berstehende Inhalte */
+}
+
+
+/* Styles for the currently scanning display */
+#currently-scanning {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: pre-line;
+    overflow-wrap: break-word;     /* moderner Standard */
+    word-wrap: break-word;         /* Fallback */
+    word-break: break-all;         /* bricht mitten im Wort */
+}
+
+/* Styles for the skip scan button */
+#skip-scan {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Styles for the skip scan button on hover */
+#skip-scan:hover {
+    background-color: #ff1a1a;
+}
+
+/* Styles for links within message boxes */
+.message a {
+	font-size: 80%;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* Styles for the size and detection method text in message boxes */
+.message .size,
+.message .detect {
+	font-size: 75%;
+	color: #3EFF00;
+}
+
+/* Styles for the title text */
+.title {
+	font-weight: bold;
+}
+
+/* Styles for the status text */
+.status {
+	color: #3EFF00;
+}
+
+/* Styles for hiding elements */
+.avatar {
+	display: none;
+}
+
+/* Styles for left-aligned avatars */
+.avatar-left {
+	transform: scaleX(-1);
+	margin-left: -50px;
+}
+
+/* Styles for hiding elements */
+.hidden {
+	display: none;
+}
+
+/* Font definition */
+@font-face {
+	font-family: "Nix 8810";
+	src: url(Nix8810.woff);
+}
+
+/* Displays The Chevron Symbol for the Domain Header */
+.domain-header {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.domain-header::After {
+    content: "\25B8";
+    display: inline-block;
+    transition: transform 0.2s ease;
+    font-size: 18px;
+}
+
+.domain-header.open::After {
+    transform: rotate(90deg);
+}
+
+/* Media query for responsive design on smaller screens */
+@media screen and (max-width: 530px) {
+	#sidebar {
+		position: initial;
+		width: 100%;
+	}
+	#content {
+		position: initial;
+		width: 100%;
+	}
+	#footer {
+		position: initial;
+	}
+	.avatar {
+		margin: 0 auto;
+	}
+}
+
+
+
