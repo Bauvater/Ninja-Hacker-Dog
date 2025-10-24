@@ -20,6 +20,9 @@ Ninja-Hacker-Dog is a Firefox extension that automates passive and active securi
   - Detects exposed configuration, backup, and environment files (`.env`, SCM metadata, Terraform, Docker Compose, etc.).
   - Collects technology fingerprints and vulnerable version banners (WordPress, PHP, Exchange, Apache, Big-IP, etc.).
   - Flags suspicious responses and headers, such as SQL error signatures and session misconfigurations.
+- **Recon enhancements**
+  - Enumerates subdomains through crt.sh, HackerTarget, and BufferOver with one-click caching to minimise duplicate lookups.
+  - Probes newly discovered hosts in parallel to capture HTTP status codes, server headers, and `<title>` fingerprints.
 - **Active probing**
   - Sends targeted PoCs for supported CVEs (Confluence CVE-2022-26134, Bitbucket CVE-2022-36804, Exchange ProxyShell CVE-2021-34473, WebLogic CVE-2020-14882, and more).
   - Performs parameter fuzzing for XSS, SQL injection, command injection, SSTI, and prototype pollution.

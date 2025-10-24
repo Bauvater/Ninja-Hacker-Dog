@@ -12,8 +12,9 @@ import { sqlInjection } from "../rules/sql-injection.js";
 
 import { engine } from "../engine/engine.js"
 import { fuzzing_engine } from "../engine/fuzzing.js"
-import { detection } from "../engine/detection.js";
+import { detection, pushFinding } from "../engine/detection.js";
 import { clearCurrentlyScanning } from "../engine/helper.js";
+import { performSubdomainRecon } from "../engine/recon/subdomains.js";
 
 let myWindowId;
 const check_automatically = document.querySelector("#autoRequest");
@@ -22,6 +23,7 @@ const alertFilterInput = document.getElementById('alert-filter');
 const exportAlertsButton = document.getElementById('export-alerts');
 const resetLink = document.getElementById('reset');
 const domainContainerEl = document.getElementById('domain-container');
+const subdomainReconEl = document.getElementById('checkboxSubdomainRecon');
 
 const proxyEnabledEl = document.getElementById('proxyEnabled');
 const proxyHostEl = document.getElementById('proxyHost');
@@ -663,7 +665,9 @@ async function main(requestDetails) {
 		if (tabs?.length == 0 || !tabs[0].url) return;
 
 		let active_tab_url = tabs[0].url;
-		let active_domain = new URL(active_tab_url).hostname;
+        const activeUrlObj = new URL(active_tab_url);
+		let active_domain = activeUrlObj.hostname;
+        const activeRootUrl = `${activeUrlObj.protocol}//${active_domain}`;
 		let current_request_url = requestDetails.url;
 		let current_domain = new URL(current_request_url).hostname;
 
@@ -679,6 +683,79 @@ async function main(requestDetails) {
         try {
             if (guard()) return;
             const detectedTags = await tags(current_request_url, { signal });
+            if (guard()) return;
+
+            if (!guard() && subdomainReconEl?.checked) {
+                try {
+                    const reconResult = await performSubdomainRecon(active_domain, {
+                        signal,
+                        probeLimit: 30,
+                        probeBatchSize: 5
+                    });
+                    if (guard()) return;
+                    if (Array.isArray(reconResult?.subdomains) && reconResult.subdomains.length) {
+                        const aliveHosts = Array.isArray(reconResult.probed)
+                            ? reconResult.probed.filter(entry => entry && typeof entry.status === "number" && entry.status > 0 && entry.status < 500)
+                            : [];
+                        const providerSummary = Object.entries(reconResult.sources || {})
+                            .map(([name, count]) => `  - ${name}: ${count}`)
+                            .join("\n");
+                        const previewLimit = 25;
+                        const previewItems = reconResult.subdomains.slice(0, previewLimit)
+                            .map((host, idx) => `  ${idx + 1}. ${host}`)
+                            .join("\n");
+                        const aliveLimit = 15;
+                        const alivePreview = aliveHosts.slice(0, aliveLimit)
+                            .map(entry => {
+                                const parts = [
+                                    entry.host || null,
+                                    entry.status ? `status ${entry.status}` : null,
+                                    entry.title || null,
+                                    entry.server || null
+                                ].filter(Boolean);
+                                return `  - ${parts.join(" | ")}`;
+                            })
+                            .join("\n");
+                        const evidenceSections = [];
+                        if (providerSummary) {
+                            evidenceSections.push(`Sources:\n${providerSummary}`);
+                        }
+                        if (previewItems) {
+                            const moreCount = Math.max(0, reconResult.subdomains.length - previewLimit);
+                            evidenceSections.push(
+                                `Subdomain sample (${Math.min(previewLimit, reconResult.subdomains.length)} of ${reconResult.subdomains.length}):\n${previewItems}${moreCount ? `\n  ... (${moreCount} more)` : ""}`
+                            );
+                        }
+                        if (alivePreview) {
+                            const moreAlive = Math.max(0, aliveHosts.length - aliveLimit);
+                            evidenceSections.push(
+                                `Alive hosts (${aliveHosts.length}):\n${alivePreview}${moreAlive ? `\n  ... (${moreAlive} more)` : ""}`
+                            );
+                        }
+                        const descriptionParts = [
+                            `Enumerated subdomains for ${active_domain}.`,
+                            reconResult.cached ? "Results served from cache to avoid redundant API calls." : "Fresh results fetched from remote recon providers.",
+                            `Last collection: ${new Date(reconResult.fetchedAt).toISOString()}.`
+                        ];
+                        pushFinding({
+                            url: activeRootUrl,
+                            title: "Recon: Subdomain enumeration",
+                            detectedBy: "Subdomain Recon",
+                            size: reconResult.subdomains.length,
+                            avatar: "dog-laugh",
+                            critLevel: 1,
+                            description: descriptionParts.join(" "),
+                            evidence: evidenceSections.join("\n\n")
+                        });
+                    }
+                } catch (error) {
+                    if (signal.aborted) {
+                        return;
+                    }
+                    console.warn("Subdomain recon failed:", error);
+                }
+            }
+
             if (guard()) return;
 
             let allPassiveChecks = [];

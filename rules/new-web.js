@@ -261,6 +261,9 @@ export const newWeb = [
         title: "Open Redirect (//evil.com)",
         params: ["//evil.com"],
         detectStatusCodes: ["301", "302"],
+        detectHeaderValues: [
+            { header: "Location", contains: "//evil.com" }
+        ],
         isRedirected: true,
         tags: ["get-param"],
         dog: "dog-love",
@@ -270,6 +273,9 @@ export const newWeb = [
         title: "Open Redirect (https://evil.com)",
         params: ["https://evil.com"],
         detectStatusCodes: ["301", "302"],
+        detectHeaderValues: [
+            { header: "Location", contains: "https://evil.com" }
+        ],
         isRedirected: true,
         tags: ["get-param"],
         dog: "dog-love",
@@ -278,7 +284,9 @@ export const newWeb = [
     {
         title: "CRLF Injection",
         params: ["%0d%0aSet-Cookie:crlf=true"],
-        detectHeaders: ["Set-Cookie: crlf=true"],
+        detectHeaderValues: [
+            { header: "Set-Cookie", contains: "crlf=true" }
+        ],
         tags: ["get-param"],
         dog: "dog-omg",
         critLevel: 3

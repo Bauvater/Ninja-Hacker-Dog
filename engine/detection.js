@@ -1,5 +1,5 @@
 class Message {
-	constructor(url, title, detectedBy, size, avatar, critLevel, request, response, description) {
+	constructor(url, title, detectedBy, size, avatar, critLevel, request, response, description, evidence = null) {
 		this.url = url
 		this.title = title
 		this.detectedBy = detectedBy
@@ -9,6 +9,7 @@ class Message {
         this.request = request
         this.response = response
         this.description = description
+        this.evidence = evidence
 		this.render()
 	}
 
@@ -54,6 +55,9 @@ class Message {
         messageElement.dataset.size = String(this.size);
         if (this.description) {
             messageElement.dataset.description = this.description;
+        }
+        if (this.evidence) {
+            messageElement.dataset.evidence = this.evidence;
         }
 
         const deleteButton = document.createElement('button');
@@ -162,6 +166,9 @@ class Message {
         let details = "";
         if (this.description) {
             details += `Description:\n${this.description}\n\n`;
+        }
+        if (this.evidence) {
+            details += `Evidence:\n${this.evidence}\n\n`;
         }
         details += "Request:\n";
         if (this.request) {
@@ -433,4 +440,31 @@ function checkIfVersionNumbersMatches(version, minVersion, maxVersion) {
 
 	return normalizedMinVersionString <= normalizedVersionString
 		&& normalizedMaxVersionString >= normalizedVersionString;
+}
+
+export function pushFinding({
+    url,
+    title,
+    detectedBy,
+    size = "",
+    avatar = "dog-laugh",
+    critLevel = 0,
+    request = null,
+    response = null,
+    description = "",
+    evidence = ""
+}) {
+    const normalizedUrl = url || "about:blank";
+    new Message(
+        normalizedUrl,
+        title,
+        detectedBy,
+        String(size ?? ""),
+        avatar,
+        critLevel,
+        request,
+        response,
+        description,
+        evidence || null
+    );
 }
