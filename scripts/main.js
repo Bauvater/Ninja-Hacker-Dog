@@ -9,6 +9,7 @@ import { fuzzing } from "../rules/fuzzing.js"
 import { versions } from "../rules/versions.js"
 import { htaccess } from "../rules/htaccess.js";
 import { sqlInjection } from "../rules/sql-injection.js";
+import { wafRules } from "../rules/waf.js";
 
 import { engine } from "../engine/engine.js"
 import { fuzzing_engine } from "../engine/fuzzing.js"
@@ -24,6 +25,7 @@ const exportAlertsButton = document.getElementById('export-alerts');
 const resetLink = document.getElementById('reset');
 const domainContainerEl = document.getElementById('domain-container');
 const subdomainReconEl = document.getElementById('checkboxSubdomainRecon');
+const wafChecksEl = document.getElementById('checkboxWafRecon');
 
 const proxyEnabledEl = document.getElementById('proxyEnabled');
 const proxyHostEl = document.getElementById('proxyHost');
@@ -761,6 +763,8 @@ async function main(requestDetails) {
             let allPassiveChecks = [];
             if (document.querySelector("#checkboxWeb").checked)
                 allPassiveChecks = allPassiveChecks.concat(web, newWeb, passiveChecks);
+            if (wafChecksEl?.checked)
+                allPassiveChecks = allPassiveChecks.concat(wafRules);
             if (document.querySelector("#checkboxLeaks").checked)
                 allPassiveChecks = allPassiveChecks.concat(leakUrls);
             if (document.querySelector("#checkboxHtaccess").checked)

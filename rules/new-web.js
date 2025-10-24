@@ -262,7 +262,7 @@ export const newWeb = [
         params: ["//evil.com"],
         detectStatusCodes: ["301", "302"],
         detectHeaderValues: [
-            { header: "Location", contains: "//evil.com" }
+            { header: "Location", pattern: "^\\/\\/evil\\.com(?:\\/|$)", flags: "i" }
         ],
         isRedirected: true,
         tags: ["get-param"],
@@ -274,7 +274,7 @@ export const newWeb = [
         params: ["https://evil.com"],
         detectStatusCodes: ["301", "302"],
         detectHeaderValues: [
-            { header: "Location", contains: "https://evil.com" }
+            { header: "Location", pattern: "^https:\\/\\/evil\\.com(?:\\/|$)", flags: "i" }
         ],
         isRedirected: true,
         tags: ["get-param"],

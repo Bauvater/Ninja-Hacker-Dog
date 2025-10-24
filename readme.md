@@ -23,6 +23,7 @@ Ninja-Hacker-Dog is a Firefox extension that automates passive and active securi
 - **Recon enhancements**
   - Enumerates subdomains through crt.sh, HackerTarget, and BufferOver with one-click caching to minimise duplicate lookups.
   - Probes newly discovered hosts in parallel to capture HTTP status codes, server headers, and `<title>` fingerprints.
+  - Detects common WAF/CDN providers (Cloudflare, CloudFront, Akamai, Fastly, Imperva, Azure Front Door) so you can adapt requests to edge filtering.
 - **Active probing**
   - Sends targeted PoCs for supported CVEs (Confluence CVE-2022-26134, Bitbucket CVE-2022-36804, Exchange ProxyShell CVE-2021-34473, WebLogic CVE-2020-14882, and more).
   - Performs parameter fuzzing for XSS, SQL injection, command injection, SSTI, and prototype pollution.
@@ -78,7 +79,7 @@ Visit `http://localhost:8080/` afterwards and watch Ninja-Hacker-Dog populate fi
 - **Windows sideloading:**
   1. Download or build the `.zip` archive.
   2. Rename it to `Ninja-Hacker-Dog.zip` if necessary.
-  3. Open Firefox add-on settings → gear icon → **Install Add-on From File…**.
+  3. Open Firefox add-on settings ? gear icon ? **Install Add-on From File…**.
   4. Select the archive to install.
 
 ## Release Notes (highlights)
@@ -90,3 +91,4 @@ Visit `http://localhost:8080/` afterwards and watch Ninja-Hacker-Dog populate fi
 - Source code: Mozilla Public License 2.0.
 - Artwork (dog images), name, and branding remain © Bauvater, 2025.
 - Inspired by and based on the original [Ninja Hacker Cat](https://github.com/Leetcore/ninja-hacker-cat) by 1337core.
+

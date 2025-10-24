@@ -58,7 +58,8 @@ const PROVIDERS = [
                 throw new Error(`HackerTarget responded ${response.status}`);
             }
             const text = await response.text();
-            if (text.includes("error") || text.includes("API rate limit")) {
+            const textLower = text.toLowerCase();
+            if (textLower.includes("error") || textLower.includes("api rate limit")) {
                 throw new Error("HackerTarget rate limited");
             }
             return text
@@ -81,7 +82,16 @@ const PROVIDERS = [
             if (!response.ok) {
                 throw new Error(`BufferOver responded ${response.status}`);
             }
-            const data = await response.json();
+            let data = {};
+            const raw = await response.text();
+            try {
+                data = JSON.parse(raw);
+            } catch (_) {
+                if (raw && raw.toLowerCase().includes("throttle")) {
+                    throw new Error("BufferOver throttled the request");
+                }
+                data = {};
+            }
             const aggregate = [];
             for (const key of ["FDNS_A", "RDNS"]) {
                 const values = Array.isArray(data?.[key]) ? data[key] : [];
@@ -104,7 +114,11 @@ function normalizeHostname(value) {
     if (typeof value !== "string") {
         return null;
     }
-    const lower = value.trim().toLowerCase().replace(/\.*$/, "");
+    const lower = value
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/\.*$/, "");
     if (!lower) {
         return null;
     }
@@ -176,10 +190,14 @@ async function probeHosts(hosts, options) {
     const limited = hosts.slice(0, Math.min(hosts.length, options?.probeLimit ?? MAX_PROBED_HOSTS));
     const batchSize = options?.probeBatchSize ?? PROBE_BATCH_SIZE;
     setCurrentlyScanning(`Recon:\nProbing ${limited.length} host(s)`);
-    return mapInBatches(limited, batchSize, async host => {
-        const result = await probeHost(host, options);
-        return result;
-    });
+    try {
+        return await mapInBatches(limited, batchSize, async host => {
+            const result = await probeHost(host, options);
+            return result;
+        });
+    } finally {
+        setCurrentlyScanning("");
+    }
 }
 
 export async function performSubdomainRecon(domain, options = {}) {
@@ -196,43 +214,54 @@ export async function performSubdomainRecon(domain, options = {}) {
     }
 
     const cacheKey = buildCacheKey(normalizedDomain);
+    if (options?.signal?.aborted) {
+        throw options.signal.reason || new DOMException("Aborted", "AbortError");
+    }
     if (!options.forceRefresh) {
         const cached = await readCache(cacheKey);
         if (cached) {
             return { ...cached, cached: true };
-    }
+        }
     }
 
     setCurrentlyScanning(`Recon:\nEnumerating *.${normalizedDomain}`);
 
     const aggregate = new Set();
     const sources = {};
-    const providerPromises = PROVIDERS.map(async provider => {
-        try {
-            const entries = await provider.fetch(normalizedDomain, options.signal);
-            const normalized = [];
-            for (const entry of entries) {
-                const host = normalizeHostname(entry);
-                if (!host || !isRelatedSubdomain(host, normalizedDomain)) {
-                    continue;
-                }
-                aggregate.add(host);
-                normalized.push(host);
-            }
-            sources[provider.name] = normalized.length;
-        } catch (error) {
-            sources[provider.name] = 0;
-            if (options?.logErrors) {
-                console.warn(`[Recon] ${provider.name} failed`, error);
-            }
-        }
-    });
 
-    await Promise.allSettled(providerPromises);
+    try {
+        const providerPromises = PROVIDERS.map(async provider => {
+            try {
+                const entries = await provider.fetch(normalizedDomain, options.signal);
+                const normalized = [];
+                for (const entry of entries) {
+                    const host = normalizeHostname(entry);
+                    if (!host || host.includes("*") || !isRelatedSubdomain(host, normalizedDomain)) {
+                        continue;
+                    }
+                    aggregate.add(host);
+                    normalized.push(host);
+                }
+                sources[provider.name] = normalized.length;
+            } catch (error) {
+                sources[provider.name] = 0;
+                if (options?.logErrors && error) {
+                    console.warn(`[Recon] ${provider.name} failed`, error);
+                }
+            }
+        });
+
+        await Promise.allSettled(providerPromises);
+    } finally {
+        setCurrentlyScanning("");
+    }
 
     const subdomains = Array.from(aggregate).sort();
 
     let probed = [];
+    if (options?.signal?.aborted) {
+        throw options.signal.reason || new DOMException("Aborted", "AbortError");
+    }
     if (subdomains.length && options.includeProbe !== false) {
         probed = await probeHosts(subdomains, options);
     }
@@ -249,4 +278,3 @@ export async function performSubdomainRecon(domain, options = {}) {
     await writeCache(cacheKey, payload, options.ttl ?? CACHE_TTL_MS);
     return payload;
 }
-
